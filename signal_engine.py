@@ -10,12 +10,26 @@ def detect_signals(df):
   df['macd_cross_up_recent']= df['macd_cross_up'].rolling(3).max()
   df['macd_cross_down_recent']= df['macd_cross_down'].rolling(3).max()
   df['rsi_diff']= df['rsi'].diff()
+  df['ema_9_slope'] = df['ema_9'].diff()
+  df['macd_hist_trend'] = df['macd_hist'].diff()
+
+  df['datetime'] = pd.to_datetime(df['datetime'])
 
   for i in range(len(df)):
     row= df.iloc[i]
 
     if i< 21:
       continue
+
+    range_ = row['high'] - row['low']
+    if range_ < 0.3:  
+      continue
+
+    hour = row['datetime'].hour
+    if hour < 9 or hour > 15:
+      continue
+
+    score = 0
 
     if (
       row['close']> row['ema_9']> row['ema_21'] and
@@ -31,7 +45,16 @@ def detect_signals(df):
       }
       signals.append(signal)
 
-      if row['rsi_diff']> 0 and row['macd_cross_up']:
+      if row['rsi_diff']> 0:
+        score += 1
+      if row['ema_9_slope'] > 0:
+        score += 1
+      if row['macd_hist_trend'] > 0:
+        score += 1
+      if row['macd_cross_up']:
+        score += 1
+
+      if score >= 3:
         confirmed_signals.append(signal)
 
     if (
@@ -48,7 +71,16 @@ def detect_signals(df):
       }
       signals.append(signal)
 
-      if row['rsi_diff']< 0 and row['macd_cross_down']:
+      if row['rsi_diff']< 0:
+        score += 1
+      if row['ema_9_slope'] < 0:
+        score += 1
+      if row['macd_hist_trend'] < 0:
+        score += 1
+      if row['macd_cross_down']:
+        score += 1
+
+      if score >= 3:
         confirmed_signals.append(signal)
 
   return pd.DataFrame(signals), pd.DataFrame(confirmed_signals)

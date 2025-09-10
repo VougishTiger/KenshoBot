@@ -35,9 +35,8 @@ def add_vwap(df):
   df['vwap']= pv/vol
 
 def add_indicators(df):
-  add_ema(df, [9, 21])
+  add_ema(df, [9, 21, 200])
   add_macd(df)
   add_rsi(df)
   add_vwap(df)
   return df
-
