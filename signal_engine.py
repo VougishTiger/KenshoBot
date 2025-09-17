@@ -15,6 +15,7 @@ def detect_signals(df):
 
   df['datetime'] = pd.to_datetime(df['datetime'])
 
+
   for i in range(len(df)):
     row= df.iloc[i]
 
@@ -36,7 +37,7 @@ def detect_signals(df):
       row['macd_cross_up_recent'] and
       row['rsi']> 40 and
       row['close']> row['vwap'] and
-      row['volume']> row['volume_avg_10']
+      row['volume']> row['volume_avg_10'] 
     ):
       signal= {
         "datetime": row['datetime'],
@@ -62,7 +63,7 @@ def detect_signals(df):
       row['macd_cross_down_recent'] and
       row['rsi'] < 60 and
       row['close'] < row['vwap'] and
-      row['volume'] > row['volume_avg_10']
+      row['volume'] > row['volume_avg_10'] 
     ):
       signal= {
          "datetime": row['datetime'],
@@ -80,7 +81,7 @@ def detect_signals(df):
       if row['macd_cross_down']:
         score += 1
 
-      if score >= 3:
+      if score >= 2:
         confirmed_signals.append(signal)
 
   return pd.DataFrame(signals), pd.DataFrame(confirmed_signals)

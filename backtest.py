@@ -1,4 +1,5 @@
 import pandas as pd
+from log_utils import log_bot_run
 
 df= pd.read_csv("data/SPY_5m_with_indicators.csv")
 signals= pd.read_csv("data/confirmed_signals.csv")
@@ -8,7 +9,7 @@ signals['datetime']= pd.to_datetime(signals['datetime'])
 
 df.set_index('datetime', inplace= True)
 
-holding_period= 50
+holding_period= 150
 results= []
 
 for _, signal in signals.iterrows():
@@ -20,12 +21,19 @@ for _, signal in signals.iterrows():
 
     entry_idx= df.index.get_loc(entry_time)
 
-    exit_idx= entry_idx + holding_period
-    if exit_idx >= len(df):
-      continue
+    exit_price= None
+    for offset in range(1, holding_period + 1):
+      if entry_idx + offset >= len(df):
+        break
+      future_row = df.iloc[entry_idx + offset]
+      ret = (future_row['close'] - entry_price) / entry_price if signal_type == "CALL" else (entry_price - future_row['close']) / entry_price
 
-    exit_row= df.iloc[exit_idx]
-    exit_price= exit_row['close']
+      if ret <= -0.015:
+        exit_price = future_row['close']
+        break
+
+    if exit_price is None:
+      exit_price = df.iloc[min(entry_idx + holding_period, len(df)-1)]['close']
 
     if signal_type == "CALL":
       ret= (exit_price - entry_price)/ entry_price
@@ -66,3 +74,11 @@ else:
   print(f"📊 Average Return: {avg_return:.2f}%")
   print(f"💰 Total Return: {total_return:.2f}%")
   print(f"📉 Max Drawdown: {max_drawdown:.2f}%")
+
+log_bot_run(
+  trades=len(results_df),
+  win_rate=win_rate,
+  avg_return=avg_return,
+  total_return=total_return,
+  max_drawdown=max_drawdown
+)

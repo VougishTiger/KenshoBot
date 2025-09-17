@@ -34,9 +34,14 @@ def add_vwap(df):
   vol= df['volume'].cumsum()
   df['vwap']= pv/vol
 
+def add_atr(df, period= 14):
+  df['tr']= df[['high', 'low', 'close']].max(axis=1) - df[['high', 'low', 'close']].min(axis=1)
+  df['atr']= df['tr'].rolling(period).mean()
+
 def add_indicators(df):
   add_ema(df, [9, 21, 200])
   add_macd(df)
   add_rsi(df)
   add_vwap(df)
+  add_atr(df)
   return df
