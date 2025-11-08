@@ -1,0 +1,21 @@
+--- Run at 2025-11-07 18:13:30.186762 ---
+Trades: 28
+Win Rate: 75.00%
+Average Return: 0.27%
+Total Return: 7.60%
+Max Drawdown: -2.32%
+
+--- Run at 2025-11-07 18:14:00.532022 ---
+Trades: 28
+Win Rate: 75.00%
+Average Return: 0.27%
+Total Return: 7.60%
+Max Drawdown: -2.32%
+
+--- Run at 2025-11-07 18:14:21.996785 ---
+Trades: 28
+Win Rate: 75.00%
+Average Return: 0.27%
+Total Return: 7.60%
+Max Drawdown: -2.32%
+

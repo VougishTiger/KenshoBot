@@ -1,12 +1,24 @@
-import pandas as pd 
-from indicators import rename_columns, add_indicators
+import pandas as pd
+from indicators import add_all_indicators
 
-df= pd.read_csv("data/SPY_5m.csv")
+df = pd.read_csv("data/SPY_5m.csv")
 
-df= rename_columns(df)
-df= add_indicators(df)
+df.rename(columns={
+    "Datetime": "datetime",
+    "close_spy": "close",
+    "open_spy": "open",
+    "high_spy": "high",
+    "low_spy": "low",
+    "volume_spy": "volume"
+}, inplace=True)
 
-output_path= "data/SPY_5m_with_indicators.csv"
-df.to_csv(output_path, index= False)
+df["datetime"] = pd.to_datetime(df["datetime"])
 
-print(f"✅ Saved data with indicators to {output_path}")
+numeric_cols = ['open', 'high', 'low', 'close', 'volume']
+df[numeric_cols] = df[numeric_cols].apply(pd.to_numeric, errors='coerce')
+df.dropna(subset=numeric_cols, inplace=True)
+
+df = add_all_indicators(df)
+df.to_csv("data/SPY_5m_with_indicators.csv", index=False)
+
+print(f"✅ Generated indicators and saved to data/SPY_5m_with_indicators.csv with {len(df)} rows.")

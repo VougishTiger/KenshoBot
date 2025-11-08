@@ -1,27 +1,33 @@
 import yfinance as yf
 import pandas as pd
-import os
 
-def fetch_and_save(ticker: str, interval= "5m", period= "60d"):
-  print(f"📥 Fetching {ticker} - {interval} candles for {period}...")
+def fetch_data():
+  TICKER = "SPY"
+  INTERVAL = "5m"
+  PERIOD = "1d"
 
-  df= yf.download(tickers=ticker, interval= interval, period= period)
+  data = yf.download(tickers=TICKER, interval=INTERVAL, period=PERIOD, progress=False)
 
-  if df.empty:
+  if isinstance(data, tuple):
+    df = data[0]
+  else:
+    df = data
+
+  if df is None or df.empty:
     print("❌ No data fetched.")
     return
-  
+
+  df.columns = [str(col).lower() for col in df.columns]
   df.reset_index(inplace=True)
-  
-  if isinstance(df.columns, pd.MultiIndex):
-    df.columns= ['_'.join([str(i) for i in col if i]) for col in df.columns]
-  
-  df.columns= [str(col).strip().lower().replace(" ","_") for col in df.columns]
 
-  os.makedirs("data", exist_ok=True)
-  filename= f"data/{ticker.upper()}_{interval}.csv"
-  df.to_csv(filename, index= False)
-  print(f"✅ Saved {len(df)} rows to {filename}")
+  df.rename(columns={
+    "datetime": "Datetime",
+    "close": "close_spy",
+    "open": "open_spy",
+    "high": "high_spy",
+    "low": "low_spy",
+    "volume": "volume_spy"
+  }, inplace=True)
 
-if __name__=="__main__":
-  fetch_and_save("SPY")
+  df.to_csv("data/SPY_5m.csv", index=False)
+  print(f"✅ Saved fresh data to data/SPY_5m.csv with {len(df)} rows.")
