@@ -1,0 +1,19 @@
+datetime,signal,entry_price,exit_price,win,pct_change,pnl,setup_id
+2025-10-29 09:12:00,PUT,687.89,687.8,True,0.01,0.01,PUT_resistance_volume_macdDown_rsiWeak
+2025-10-29 09:13:00,PUT,687.87,687.88,False,-0.0,-0.0,PUT_resistance_volume_macdDown_rsiWeak
+2025-10-29 11:06:00,CALL,688.77,688.82,True,0.01,0.01,CALL_support_volume_macdUp_rsiStrong
+2025-10-29 11:08:00,CALL,688.77,688.82,True,0.01,0.01,CALL_support_volume_macdUp_rsiStrong
+2025-10-29 11:28:00,CALL,689.19,689.26,True,0.01,0.01,CALL_support_volume_macdUp_rsiStrong
+2025-10-29 13:51:00,CALL,689.16,689.29,True,0.02,0.02,CALL_support_volume_macdUp_rsiStrong
+2025-10-30 12:44:00,PUT,684.47,684.43,True,0.01,0.01,PUT_resistance_volume_macdDown_rsiWeak
+2025-10-31 13:24:00,PUT,685.0,685.03,False,-0.0,-0.0,PUT_resistance_volume_macdDown_rsiWeak
+2025-10-31 13:25:00,PUT,684.99,684.84,True,0.02,0.02,PUT_resistance_volume_macdDown_rsiWeak
+2025-11-03 14:19:00,CALL,685.37,685.41,True,0.01,0.01,CALL_support_volume_macdUp_rsiStrong
+2025-11-03 14:29:00,CALL,685.66,684.9897,False,-0.1,-0.1,CALL_support_volume_macdUp_rsiStrong
+2025-11-04 14:01:00,PUT,675.41,675.37,True,0.01,0.01,PUT_resistance_volume_macdDown_rsiWeak
+2025-11-05 10:30:00,PUT,673.97,674.21,False,-0.04,-0.04,PUT_resistance_volume_macdDown_rsiWeak
+2025-11-06 11:34:00,PUT,677.98,678.25,False,-0.04,-0.04,PUT_resistance_volume_macdDown_rsiWeak
+2025-11-07 10:12:00,PUT,670.54,670.0,True,0.08,0.08,PUT_resistance_volume_macdDown_rsiWeak
+2025-11-07 10:46:00,PUT,669.87,669.89,False,-0.0,-0.0,PUT_resistance_volume_macdDown_rsiWeak
+2025-11-07 13:26:00,PUT,667.77,667.35,True,0.06,0.06,PUT_resistance_volume_macdDown_rsiWeak
+2025-11-07 14:17:00,PUT,667.39,667.27,True,0.02,0.02,PUT_resistance_volume_macdDown_rsiWeak

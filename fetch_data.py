@@ -1,33 +1,45 @@
-import yfinance as yf
+import requests
 import pandas as pd
+from datetime import datetime, timedelta
 
 def fetch_data():
-  TICKER = "SPY"
-  INTERVAL = "5m"
-  PERIOD = "1d"
+    API_KEY = "Zjla2_CQEEo5530tKuNIcpXCAkp6uv9p"
+    TICKER = "SPY"
+    MULTIPLIER = 1
+    TIMESCALE = "minute"
 
-  data = yf.download(tickers=TICKER, interval=INTERVAL, period=PERIOD, progress=False)
+    end = datetime.utcnow()
+    start = end - timedelta(days=1)
+    from_date = start.strftime("%Y-%m-%d")
+    to_date = end.strftime("%Y-%m-%d")
 
-  if isinstance(data, tuple):
-    df = data[0]
-  else:
-    df = data
+    url = f"https://api.polygon.io/v2/aggs/ticker/{TICKER}/range/{MULTIPLIER}/{TIMESCALE}/{from_date}/{to_date}"
+    params = {
+        "adjusted": "true",
+        "sort": "asc",
+        "limit": 1000,
+        "apiKey": API_KEY
+    }
 
-  if df is None or df.empty:
-    print("❌ No data fetched.")
-    return
+    response = requests.get(url, params=params)
+    if response.status_code != 200:
+        raise Exception(f"Polygon API error {response.status_code}: {response.text}")
 
-  df.columns = [str(col).lower() for col in df.columns]
-  df.reset_index(inplace=True)
+    data = response.json().get("results", [])
+    if not data:
+        raise Exception("No data received from Polygon")
 
-  df.rename(columns={
-    "datetime": "Datetime",
-    "close": "close_spy",
-    "open": "open_spy",
-    "high": "high_spy",
-    "low": "low_spy",
-    "volume": "volume_spy"
-  }, inplace=True)
+    df = pd.DataFrame(data)
+    df["datetime"] = pd.to_datetime(df["t"], unit="ms")
+    df = df[["datetime", "o", "h", "l", "c", "v"]]
+    df.columns = ["datetime", "open", "high", "low", "close", "volume"]
+    df["ticker"] = TICKER.lower()
 
-  df.to_csv("data/SPY_5m.csv", index=False)
-  print(f"✅ Saved fresh data to data/SPY_5m.csv with {len(df)} rows.")
+    output_file = "data/SPY_1m.csv"
+    df.to_csv(output_file, index=False)
+    print(f"✅ Saved fresh Polygon data to {output_file} with {len(df)} rows.")
+
+    return df
+
+if __name__ == "__main__":
+    fetch_data()

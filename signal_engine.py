@@ -16,7 +16,6 @@ def detect_signals(df):
 
   df['support_zone'] = df['low'].rolling(20).min()
   df['resistance_zone'] = df['high'].rolling(20).max()
-
   df['datetime'] = pd.to_datetime(df['datetime'])
 
   for i in range(len(df)):
@@ -33,7 +32,6 @@ def detect_signals(df):
 
     is_above_vwap = row['close'] > row['vwap']
     is_below_vwap = row['close'] < row['vwap']
-
     is_near_support = abs(row['close'] - row['support_zone']) <= 1.0
     is_near_resistance = abs(row['close'] - row['resistance_zone']) <= 1.0
 
@@ -115,9 +113,8 @@ def detect_signals(df):
 
   return pd.DataFrame(signals), pd.DataFrame(confirmed_signals)
 
-
 if __name__ == "__main__":
-  df = pd.read_csv("data/SPY_5m_with_indicators.csv")
+  df = pd.read_csv("data/SPY_1m_with_indicators.csv")
   signals_df, confirmed_signals_df = detect_signals(df)
 
   if signals_df.empty:
